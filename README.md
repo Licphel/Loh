@@ -77,7 +77,7 @@ end
 local os = require("lang/os.loh")
 local i = 1
 
--- We must declare a function's accessibility (local or const) or it will be seen as a anomy function expression!
+-- We must declare a function's accessibility (local or const) or it will be seen as a anonymous function expression!
 local function fib(x)
   if(x <= 2) do return i end -- Here a local variable 'i' is captured.
   return fib(x - 1) + fib(x - 2)
