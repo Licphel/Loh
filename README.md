@@ -33,7 +33,7 @@ end
 
 -- While loop with brackets.
 v = 0
-while v < 3 do
+while(v < 3) do
   v = v + 1
   os.print(v)
 end
