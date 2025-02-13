@@ -63,7 +63,7 @@ public class LohEngine
 		ID idt = new ID(name);
 
 		if(LoadedScripts.TryGetValue(idt, out LohState inst))
-			return new Union(inst.Table);
+			return Union.GetFromObject(inst.Table);
 
 		var code = StringIO.Read(idt.File);
 		var lst = new Lexer().Analyse(idt.Full, code);
@@ -73,7 +73,7 @@ public class LohEngine
 		// Run once when compiled.
 		Exec(fn);
 
-		return new Union((LoadedScripts[idt] = fn.Func.State).Table);
+		return Union.GetFromObject((LoadedScripts[idt] = fn.Func.State).Table);
 	}
 
 	public static Union Exec(LohClosure fn, params object[] objs)

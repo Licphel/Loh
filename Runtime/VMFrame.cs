@@ -36,7 +36,7 @@ public unsafe class VMFrame
 
 	public ref Union Evaluate(LohClosure o, params object[] objs)
 	{
-		Stack[Stacktop++] = new Union(o);
+		Stack[Stacktop++] = Union.GetFromObject(o);
 
 		CallFrame frame = Frames[FrameCount++];
 		frame.Closure = o;
@@ -146,8 +146,8 @@ public unsafe class VMFrame
 					--Stacktop;
 					offset = Stack[Slotsnow + *Ipnow++].AsInt;
 					str = inst.KeyArranged[offset];
-					Stack[Slotsnow + *Ipnow++] = new Union(str);
-					Stack[Slotsnow + *Ipnow++] = new Union(inst[str]);
+					Stack[Slotsnow + *Ipnow++] = Union.GetFromObject(str);
+					Stack[Slotsnow + *Ipnow++] = Union.GetFromObject(inst[str]);
 					break;
 				case VMOP.SetTable:
 					inst = (LohTable) Stack[Stacktop - 2].Objref;
@@ -238,7 +238,7 @@ public unsafe class VMFrame
 				case VMOP.Close:
 					fn = (LohFunc) Constsnow[*Ipnow++].Objref;
 					clos = new LohClosure(fn);
-					Stack[Stacktop++] = new Union(clos);
+					Stack[Stacktop++] = Union.GetFromObject(clos);
 					for(int i = 0; i < clos.UpvalCount; i++)
 					{
 						int local = *Ipnow++;
@@ -249,22 +249,6 @@ public unsafe class VMFrame
 							clos.Upvalues[i] = FrameNow.Closure.Upvalues[id];
 					}
 					break;
-				// Class is not supported.
-				// Closures are better.
-				/*
-				case VMOP.Class:
-					str = (string) Constsnow[*Ipnow++].Objref;
-					Stack[Stacktop++] = new Union(new MoceClass(str));
-					break;
-				case VMOP.Method:
-					str = (string) Constsnow[*Ipnow++].Objref;
-					class1 = (MoceClass) Stack[Stacktop - 2].Objref;
-					class1.Methods[str] = v = Stack[Stacktop - 1];
-					if(str == "__ctor__")
-						class1.Constructor = v;
-					--Stacktop;
-					break;
-				*/
 				case VMOP.TabCall:
 					str = (string) Constsnow[*Ipnow++].Objref;
 					argc = *Ipnow++;
@@ -273,10 +257,10 @@ public unsafe class VMFrame
 					TakeFrame();
 					break;
 				case VMOP.Table:
-					Stack[Stacktop++] = new Union(new LohTable());
+					Stack[Stacktop++] = Union.GetFromObject(new LohTable());
 					break;
 				case VMOP.Array:
-					Stack[Stacktop++] = new Union(new LohArray());
+					Stack[Stacktop++] = Union.GetFromObject(new LohArray());
 					break;
 				case VMOP.Equal:
 					v1 = Stack[--Stacktop];

@@ -180,7 +180,7 @@ public unsafe class Compiler
 			name = Consume(Token.Ident);
 			// Emit an unimplemented function.
 			LohFuncNative fn = new LohFuncNative(name.Value.AsString, null);
-			Emit(VMOP.Close, MakeConst(new Union(fn)));
+			Emit(VMOP.Close, MakeConst(Union.GetFromObject(fn)));
 			SetVariable(name, global ? 1 : 0);
 			return;
 		}
@@ -214,7 +214,7 @@ public unsafe class Compiler
 
 		FrameTrace frame = FrameNow;// Get a copy, we haven't got upvalues yet.
 		LohFunc fn = EndCompile();
-		Emit(VMOP.Close, MakeConst(new Union(fn)));
+		Emit(VMOP.Close, MakeConst(Union.GetFromObject(fn)));
 		// Should be followed by a set local or global
 
 		for(int i = 0; i < fn.UpvalCount; i++)
@@ -995,7 +995,7 @@ public unsafe class Compiler
 
 	int MakeConstIdent(Lexeme name)
 	{
-		return MakeConst(new Union(name.Portion));
+		return MakeConst(Union.GetFromObject(name.Portion));
 	}
 
 	// Toolkit functions.

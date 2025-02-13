@@ -177,7 +177,7 @@ public unsafe class Lexer
 			throw LohException.Disassembling("Unable to find paired quotation marks for string.");
 		Current++;
 		string sub = Src.Substring(Start + 1, Current - Start - 2);
-		Push(Token.String, new Union(sub));
+		Push(Token.String, Union.GetFromObject(sub));
 	}
 
 	void PickNum()

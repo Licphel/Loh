@@ -31,7 +31,7 @@ public unsafe readonly struct Union
 		Type = 2;
 	}
 
-	public Union(object uo)
+	Union(object uo)
 	{
 		if(uo == null)
 		{
@@ -40,9 +40,7 @@ public unsafe readonly struct Union
 		}
 		if(uo is Union ev)
 		{
-			Objref = ev.Objref;
-			Type = 3;
-			return;
+			LohException.Runtime("Duplicated boxing!");
 		}
 		Objref = uo;
 		Type = 3;
@@ -142,7 +140,7 @@ public unsafe readonly struct Union
 			return v > -10E-6 && v < 10E-6;
 		}
 		if(u1.IsBool && u2.IsBool) return u1.Bool == u2.Bool;
-		if(u1.IsObj && u2.IsObj) return u1.Objref == u2.Objref;
+		if(u1.IsObj && u2.IsObj) return u1.Equals(u2);
 		return u1.IsNull && u2.IsNull;
 	}
 
