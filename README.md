@@ -1,5 +1,8 @@
 # Loh
 A very simple script language, needs only less than 2000 lines of code to build.
+## Requirements
+- Kinetic.App
+- Kinetic.IO
 ## Loh Grammar
 - Variables & Control flows
 ```
