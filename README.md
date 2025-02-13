@@ -98,3 +98,10 @@ dataonly
   ]
 }
 ```
+## How to run a loh file
+Simply call like this. It returns a dynamic value so make type checks!
+```
+FileHandle handle = FileSystem.GetAbsolute(absolutePath);
+var returnedValue = LohEngine.Exec(handle)
+```
+where you can get the file handle through FileSystem or just instantiate one implementation.
