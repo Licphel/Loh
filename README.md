@@ -3,7 +3,7 @@ A very simple script language, needs only less than 2000 lines of code to build.
 Can work as game scripts.
 ## Requirements
 - Kinetic.App
-- Kinetic.IO
+- Kinetic.IO  
 Find the libs above in my repo 'Kinetic'.
 ## Speed (on default stack-based vm)
 - Calculating fibonacci 30~60 times slower than C#.
@@ -118,6 +118,6 @@ var returnedValue = LohEngine.Exec(handle);
 -- Or we want to call a named function. (P.S. the function must be a const, not local!)
 var state = LohEngine.Require(null, StringIO.Read(absolutePath), false);
 var fn = state.Table["funcName"];
-returnedValue = LohEngine.Exec(fn);
+returnedValue = LohEngine.Exec(fn, "Look we can pass args here", "Any object is ok", 1234);
 ```
 You can get the file handle through FileSystem or just instantiate one implementation. The absolutePath is up to you.
