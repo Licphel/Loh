@@ -1,8 +1,14 @@
 # Loh
-A very simple script language, needs only less than 2000 lines of code to build.
+A very simple script language, needs only less than 2000 lines of code to build.  
+Can work as game scripts.
 ## Requirements
 - Kinetic.App
 - Kinetic.IO
+Find the libs above in my repo 'Kinetic'.
+## Speed (on default stack-based vm)
+- Calculating fibonacci 30~60 times slower than C#.
+- Run 1,000,000 times of loop 50~70 times slower than C#.
+- Quite fast function call and table/array operation.
 ## Loh Grammar
 - Variables & Control flows
 ```
@@ -68,7 +74,7 @@ table["x"] = 2
 os.print(table["x"])
 os.print(table.x)
 
--- Run through the whole table
+-- Tranverse through the whole table.
 foreach k, v in table do
   if k == "z" do break end -- Break statement
   os.print(k)
@@ -87,13 +93,14 @@ local function fib(x)
 end
 
 local fn_ref = fib -- Function referrence
+local fn_anonym = function(x) return x end -- Anonymous function
 os.print(fn_ref(10))
 ```
 - Dataonly  
-Returns a dataonly table or array using a much faster dataonly parser. No variables, no functions, just like json.
+Once the complier see the keyword 'dataonly', it switches into a faster compling mode, where there are no variables, no functions, etc. 'return' is needless here.
 ```
 -- Keyword 'dataonly' must be at the begin of the code body (however, comments before it is ok)
-dataonly 
+dataonly -- Equivalent to return, but it signals the compiler to use dataonly mode.
 {
   key1 = "A",
   key2 = [
@@ -105,6 +112,12 @@ dataonly
 Simply call like this. It returns a dynamic value so make type checks!
 ```
 FileHandle handle = FileSystem.GetAbsolute(absolutePath);
-var returnedValue = LohEngine.Exec(handle)
+-- If we just want to execute a portion like the examples above.
+var returnedValue = LohEngine.Exec(handle);
+
+-- Or we want to call a named function. (P.S. the function must be a const, not local!)
+var state = LohEngine.Require(null, StringIO.Read(absolutePath), false);
+var fn = state.Table["funcName"];
+returnedValue = LohEngine.Exec(fn);
 ```
-where you can get the file handle through FileSystem or just instantiate one implementation.
+You can get the file handle through FileSystem or just instantiate one implementation. The absolutePath is up to you.
