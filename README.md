@@ -13,8 +13,8 @@ A very simple but expressive script language.
 - Kinetic.IO  
 Find the libs above in my repo 'Kinetic'.
 ## Speed (on default stack-based vm)
-- Calculating fibonacci 30~60 times slower than C#.
-- Run 1,000,000 times of loop 50~70 times slower than C#.
+- Fibonacci: 30~60 times slower than C#.
+- 1,000,000 times of loop: 50~70 times slower than C#.
 - Quite fast function call and table/array operation.
 ## Loh Grammar
 - Variables & Control flows
