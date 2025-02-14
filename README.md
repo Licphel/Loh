@@ -1,6 +1,13 @@
 # Loh
-A very simple script language, needs only less than 2000 lines of code to build.  
-Can work as game scripts.
+![](https://img.shields.io/badge/.net->=8.0-informational?style=flat-square&logo=<LOGO_NAME>&logoColor=white&color=green)
+![](https://img.shields.io/badge/license-MIT-informational?style=flat-square&logo=<LOGO_NAME>&logoColor=white&color=2bbc8a)  
+
+A very simple but expressive script language.
+- Interactive with host language
+- Highly customizable and extensible library
+- Easy to transplant - Less than 2000 lines' code of one intepreter
+- Can work as game scripts or configurations
+- Functional programming & Imperative programming support
 ## Requirements
 - Kinetic.App
 - Kinetic.IO  
