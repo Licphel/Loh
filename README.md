@@ -123,8 +123,8 @@ FileHandle handle = FileSystem.GetAbsolute(absolutePath);
 var returnedValue = LohEngine.Exec(handle);
 
 -- Or we want to call a named function. (P.S. the function must be a const, not local!)
-var state = LohEngine.Require(null, StringIO.Read(absolutePath), false);
-var fn = state.Table["funcName"];
+LohState state = LohEngine.Require(null, StringIO.Read(absolutePath), false);
+LohClosure fn = state.Table["funcName"].Dynamic;
 returnedValue = LohEngine.Exec(fn, "Look we can pass args here", "Any object is ok", 1234);
 ```
 You can get the file handle through FileSystem or just instantiate one implementation. The absolutePath is up to you.
