@@ -10,9 +10,8 @@ public unsafe class VMFrame
 
 	public static int FrameLength = 32;
 	public static int RegLength = 64;
-	public static int StackLength = FrameLength * 16;
-	public static int UpvalLength = 256;
-
+	public static int StackLength = 2048;
+	
 	public CallFrame[] Frames;
 	public CallFrame FrameNow;
 	public int FrameCount;

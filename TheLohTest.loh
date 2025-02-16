@@ -1,10 +1,9 @@
-﻿local os = require("lang/os.loh")
-local i = 1
-
+﻿
 local function fib(x)
-  if(x <= 2) do return i end -- Here a local variable 'i' is captured.
+  if(x <= 2) do return 1 end
   return fib(x - 1) + fib(x - 2)
 end
 
-local fn_ref = fib -- Function referrence
-os.print(fn_ref(10))
+const function doit()
+  for i = 0, i < 1000000, i = i + 1 do end
+end
