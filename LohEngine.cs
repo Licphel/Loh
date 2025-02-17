@@ -96,12 +96,12 @@ public class LohEngine
 
 	public static dynamic Exec(FileHandle path)
 	{
-		return Exec(Require(null, StringIO.Read(path), false).TopFunc).Dynamic;
+		return Exec(Require(path.Path, StringIO.Read(path), false).TopFunc).Dynamic;
 	}
 
 	public static dynamic Exec(ID path)
 	{
-		return Exec(Require(null, StringIO.Read(path.File), false).TopFunc).Dynamic;
+		return Exec(Require(path.File.Path, StringIO.Read(path.File), false).TopFunc).Dynamic;
 	}
 
 }
