@@ -1,5 +1,21 @@
 # Loh
-A very simple script language, needs only less than 2000 lines of code to build.
+![](https://img.shields.io/badge/.net->=8.0-informational?style=flat-square&logo=<LOGO_NAME>&logoColor=white&color=green)
+![](https://img.shields.io/badge/license-MIT-informational?style=flat-square&logo=<LOGO_NAME>&logoColor=white&color=2bbc8a)  
+
+A very simple but expressive script language.
+- Interactive with host language
+- Highly customizable and extensible library
+- Easy to transplant - Less than 2000 lines' code of one intepreter
+- Can work as game scripts or configurations
+- Functional programming & Imperative programming support
+## Requirements
+- Kinetic.App
+- Kinetic.IO  
+Find the libs above in my repo 'Kinetic'.
+## Speed (on default stack-based vm)
+- Fibonacci: 30~60 times slower than C#.
+- 1,000,000 times of loop: 50~70 times slower than C#.
+- Quite fast function call and table/array operation.
 ## Loh Grammar
 - Variables & Control flows
 ```
@@ -33,7 +49,7 @@ end
 
 -- While loop with brackets.
 v = 0
-while v < 3 do
+while(v < 3) do
   v = v + 1
   os.print(v)
 end
@@ -65,7 +81,7 @@ table["x"] = 2
 os.print(table["x"])
 os.print(table.x)
 
--- Run through the whole table
+-- Tranverse through the whole table.
 foreach k, v in table do
   if k == "z" do break end -- Break statement
   os.print(k)
@@ -77,20 +93,21 @@ end
 local os = require("lang/os.loh")
 local i = 1
 
--- We must declare a function's accessibility (local or const) or it will be seen as a anomy function expression!
+-- We must declare a function's accessibility (local or const) or it will be seen as a anonymous function expression!
 local function fib(x)
   if(x <= 2) do return i end -- Here a local variable 'i' is captured.
   return fib(x - 1) + fib(x - 2)
 end
 
 local fn_ref = fib -- Function referrence
+local fn_anonym = function(x) return x end -- Anonymous function
 os.print(fn_ref(10))
 ```
 - Dataonly  
-Returns a dataonly table or array using a much faster dataonly parser. No variables, no functions, just like json.
+Once the complier see the keyword 'dataonly', it switches into a faster compling mode, where there are no variables, no functions, etc. 'return' is needless here.
 ```
 -- Keyword 'dataonly' must be at the begin of the code body (however, comments before it is ok)
-dataonly 
+dataonly -- Equivalent to return, but it signals the compiler to use dataonly mode.
 {
   key1 = "A",
   key2 = [
@@ -98,3 +115,16 @@ dataonly
   ]
 }
 ```
+## How to run a loh file
+Simply call like this. It returns a dynamic value so make type checks!
+```
+FileHandle handle = FileSystem.GetAbsolute(absolutePath);
+-- If we just want to execute a portion like the examples above.
+var returnedValue = LohEngine.Exec(handle);
+
+-- Or we want to call a named function. (P.S. the function must be a const, not local!)
+LohState state = LohEngine.Require(null, StringIO.Read(absolutePath), false);
+LohClosure fn = state.Table["funcName"].Dynamic;
+returnedValue = LohEngine.Exec(fn, "Look we can pass args here", "Any object is ok", 1234);
+```
+You can get the file handle through FileSystem or just instantiate one implementation. The absolutePath is up to you.
