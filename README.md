@@ -8,11 +8,11 @@ A very simple but expressive script language.
 - Easy to transplant - Less than 2000 lines' code of one intepreter
 - Can work as game scripts or configurations
 - Functional programming & Imperative programming support
-## Requirements
+## Requirements (Find these in my repo 'Kinetic'.)
 - Kinetic.App
-- Kinetic.IO  
-Find the libs above in my repo 'Kinetic'.
-## Speed (on default stack-based vm)
+- Kinetic.IO
+- Kinetic.Math (Optional, only used in LohLibMath)  
+## Speed (On default stack-based vm)
 - Fibonacci: 30~60 times slower than C#.
 - 1,000,000 times of loop: 50~70 times slower than C#.
 - Quite fast function call and table/array operation.
