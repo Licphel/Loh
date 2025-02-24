@@ -55,8 +55,10 @@ public unsafe class VMFrame
 	ref Union Run()
 	{
 		// Local temp for speeding up.
-
 		LohTable Tablenow = this.StateNow;
+		Union[] Stack = this.Stack;
+		Union[] Reg = this.Reg;
+		
 		int* Ipnow;
 		int Slotsnow;
 		Union[] Constsnow;

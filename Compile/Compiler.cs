@@ -174,17 +174,7 @@ public unsafe class Compiler
 
 	void DecFunction(bool global)
 	{
-		Lexeme name;
-		if(Match(Token.Native))
-		{
-			name = Consume(Token.Ident);
-			// Emit an unimplemented function.
-			LohFuncNative fn = new LohFuncNative(name.Value.AsString, null);
-			Emit(VMOP.Close, MakeConst(Union.GetFromObject(fn)));
-			SetVariable(name, global ? 1 : 0);
-			return;
-		}
-		name = Consume(Token.Ident);
+		Lexeme name = Consume(Token.Ident);
 		NewFunction(0, name, global);
 		SetVariable(name, global ? 1 : 0);
 	}
@@ -794,7 +784,7 @@ public unsafe class Compiler
 				Emit(VMOP.GetLocal, id);
 			}
 		}
-		else if(site == 2 && (id = UpvalueId(FrameNow, name)) != -1)
+		else if((site == 0 || site == 2) && (id = UpvalueId(FrameNow, name)) != -1)
 		{
 			if(assign && Match(Token.EqAssign))
 			{
@@ -807,7 +797,7 @@ public unsafe class Compiler
 				Emit(VMOP.GetUpval, id);
 			}
 		}
-		else if(site == 1 || site == 2)
+		else if(site != 0)
 		{
 			id = MakeConstIdent(name);
 			if(assign && Match(Token.EqAssign))

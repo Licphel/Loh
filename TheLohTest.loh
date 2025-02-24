@@ -1,5 +1,4 @@
-﻿
-local function fib(x)
+﻿local function fib(x)
   if(x <= 2) do return 1 end
   return fib(x - 1) + fib(x - 2)
 end
