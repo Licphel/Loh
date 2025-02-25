@@ -5,22 +5,23 @@ namespace Loh.Lexing;
 public class Lexeme
 {
 
-	public string Portion;
-	public int Line;
-	public Union Value;
-	public Token Type;
+    public int Line;
 
-	public Lexeme(Token type, string portion, Union val, int ln)
-	{
-		Type = type;
-		Portion = portion;
-		Value = val;
-		Line = ln;
-	}
+    public string Portion;
+    public Token Type;
+    public Union Value;
 
-	public override string ToString()
-	{
-		return $"[{Type} {Portion} {Value}]";
-	}
+    public Lexeme(Token type, string portion, Union val, int ln)
+    {
+        Type = type;
+        Portion = portion;
+        Value = val;
+        Line = ln;
+    }
+
+    public override string ToString()
+    {
+        return $"[{Type} {Portion} {Value}]";
+    }
 
 }

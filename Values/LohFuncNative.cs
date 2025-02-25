@@ -1,24 +1,22 @@
-﻿using Kinetic;
-using Kinetic.App;
-using Loh.Runtime;
+﻿using Loh.Runtime;
 
 namespace Loh.Values;
 
-public sealed unsafe class LohFuncNative
+public sealed class LohFuncNative
 {
 
-	public string Name;
-	public Response<Arguments> NativeFn;
+    public string Name;
+    public Action<Arguments> NativeFn;
 
-	public LohFuncNative(string name, Response<Arguments> fn)
-	{
-		Name = name;
-		NativeFn = fn;
-	}
+    public LohFuncNative(string name, Action<Arguments> fn)
+    {
+        Name = name;
+        NativeFn = fn;
+    }
 
-	public override string ToString()
-	{
-		return $"NF<{Name}>";
-	}
+    public override string ToString()
+    {
+        return $"NF<{Name}>";
+    }
 
 }

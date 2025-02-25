@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using Kinetic.IO;
+using KryptonM.IO;
 using Loh.Lexing;
 
 namespace Loh.Compile;
@@ -7,118 +7,118 @@ namespace Loh.Compile;
 public class CompilerDataonly
 {
 
-	List<Lexeme> code;
-	int itrtimes;
-	int pos;
-	bool stopped;
+    private readonly List<Lexeme> code;
+    private int itrtimes;
+    private int pos;
+    private bool stopped;
 
-	public CompilerDataonly(List<Lexeme> _code, int _pos)
-	{
-		code = _code;
-		pos = _pos;
-	}
+    public CompilerDataonly(List<Lexeme> _code, int _pos)
+    {
+        code = _code;
+        pos = _pos;
+    }
 
-	public object Parse()
-	{
-		Lexeme c = code[pos];
+    public object Parse()
+    {
+        Lexeme c = code[pos];
 
-		itrtimes++;
+        itrtimes++;
 
-		if(itrtimes >= 32767)
-		{
-			stopped = true;
-			throw new Exception("Too many iterations. Dataonly table parser is interrupted!");
-		}
+        if(itrtimes >= 32767)
+        {
+            stopped = true;
+            throw new Exception("Too many iterations. Dataonly table parser is interrupted!");
+        }
 
-		switch(c.Type)
-		{
-			case Token.Brace1:
-				return parseObject();
-			case Token.Sqbra1:
-				return parseArray();
-			case Token.String:
-			case Token.Null:
-			case Token.Number:
+        switch(c.Type)
+        {
+            case Token.Brace1:
+                return parseObject();
+            case Token.Sqbra1:
+                return parseArray();
+            case Token.String:
+            case Token.Null:
+            case Token.Number:
                 ++pos;
-				return c.Value.Boxed;
-			case Token.True:
-				++pos;
-				return true;
-			case Token.False:
-				++pos;
-				return false;
-			default:
-				return null;
-		}
-	}
+                return c.Value.Boxed;
+            case Token.True:
+                ++pos;
+                return true;
+            case Token.False:
+                ++pos;
+                return false;
+            default:
+                return null;
+        }
+    }
 
-	IBinaryCompound parseObject()
-	{
-		IBinaryCompound result = IBinaryCompound.New();
+    private IBinaryCompound parseObject()
+    {
+        IBinaryCompound result = IBinaryCompound.New();
 
-		++pos;
+        ++pos;
 
-		Lexeme ch = code[pos];
+        Lexeme ch = code[pos];
 
-		while(ch.Type != Token.Brace2 && !stopped)
-		{
-			string key = parseKey();
-			++pos;
+        while(ch.Type != Token.Brace2 && !stopped)
+        {
+            var key = parseKey();
+            ++pos;
 
-			object value = Parse();
-			result.Set(key, value);
+            var value = Parse();
+            result.Set(key, value);
 
-			ch = code[pos];
+            ch = code[pos];
 
-			if(ch.Type == Token.Comma)
-				++pos;
+            if(ch.Type == Token.Comma)
+                ++pos;
 
-			ch = code[pos];
-		}
+            ch = code[pos];
+        }
 
-		++pos;
-		return result;
-	}
+        ++pos;
+        return result;
+    }
 
-	IBinaryList parseArray()
-	{
-		IBinaryList result = IBinaryList.New();
-		++pos;
+    private IBinaryList parseArray()
+    {
+        IBinaryList result = IBinaryList.New();
+        ++pos;
 
-		Lexeme ch = code[pos];
+        Lexeme ch = code[pos];
 
-		while(ch.Type != Token.Sqbra2 && !stopped)
-		{
-			object value = Parse();
-			result.Insert(value);
+        while(ch.Type != Token.Sqbra2 && !stopped)
+        {
+            var value = Parse();
+            result.Insert(value);
 
-			ch = code[pos];
+            ch = code[pos];
 
-			if(ch.Type == Token.Comma)
-				++pos;
+            if(ch.Type == Token.Comma)
+                ++pos;
 
-			ch = code[pos];
-		}
+            ch = code[pos];
+        }
 
-		++pos;
+        ++pos;
 
-		return result;
-	}
+        return result;
+    }
 
-	string parseKey()
-	{
-		StringBuilder result = new StringBuilder();
+    private string parseKey()
+    {
+        StringBuilder result = new StringBuilder();
 
-		Lexeme ch = code[pos];
+        Lexeme ch = code[pos];
 
-		while(ch.Type != Token.EqAssign && !stopped)
-		{
-			result.Append(ch.Portion);
-			++pos;
-			ch = code[pos];
-		}
+        while(ch.Type != Token.EqAssign && !stopped)
+        {
+            result.Append(ch.Portion);
+            ++pos;
+            ch = code[pos];
+        }
 
-		return result.ToString();
-	}
+        return result.ToString();
+    }
 
 }

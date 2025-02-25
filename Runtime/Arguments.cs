@@ -5,55 +5,56 @@ namespace Loh.Runtime;
 public class Arguments
 {
 
-	public VMFrame Frame;
-	public int Arity;
-	public int Stacktop0;
-	public Union ReturnVal;
-	public Union Self;
+    public int Arity;
 
-	public Arguments(VMFrame frame)
-	{
-		Frame = frame;
-	}
+    public VMFrame Frame;
+    public Union ReturnVal;
+    public Union Self;
+    public int Stacktop0;
 
-	public dynamic GetDynamic(int index)
-	{
-		return Frame.Stack[Stacktop0 - Arity + index].Boxed;
-	}
+    public Arguments(VMFrame frame)
+    {
+        Frame = frame;
+    }
 
-	public Union GetRaw(int index)
-	{
-		return Frame.Stack[Stacktop0 - Arity + index];
-	}
+    public dynamic GetDynamic(int index)
+    {
+        return Frame.Stack[Stacktop0 - Arity + index].Boxed;
+    }
 
-	public int GetInt(int index)
-	{
-		return Frame.Stack[Stacktop0 - Arity + index].AsInt;
-	}
+    public Union GetRaw(int index)
+    {
+        return Frame.Stack[Stacktop0 - Arity + index];
+    }
 
-	public float GetFloat(int index)
-	{
-		return Frame.Stack[Stacktop0 - Arity + index].AsFloat;
-	}
+    public int GetInt(int index)
+    {
+        return Frame.Stack[Stacktop0 - Arity + index].AsInt;
+    }
 
-	public bool GetBool(int index)
-	{
-		return Frame.Stack[Stacktop0 - Arity + index].AsBool;
-	}
+    public float GetFloat(int index)
+    {
+        return Frame.Stack[Stacktop0 - Arity + index].AsFloat;
+    }
 
-	public string GetString(int index)
-	{
-		return Frame.Stack[Stacktop0 - Arity + index].AsString;
-	}
+    public bool GetBool(int index)
+    {
+        return Frame.Stack[Stacktop0 - Arity + index].AsBool;
+    }
 
-	public T Get<T>(int index)
-	{
-		return (T) Frame.Stack[Stacktop0 - Arity + index].Boxed;
-	}
+    public string GetString(int index)
+    {
+        return Frame.Stack[Stacktop0 - Arity + index].AsString;
+    }
 
-	public void Return<T>(T o)
-	{
-		ReturnVal = Union.GetFromObject(o);
-	}
+    public T Get<T>(int index)
+    {
+        return (T)Frame.Stack[Stacktop0 - Arity + index].Boxed;
+    }
+
+    public void Return<T>(T o)
+    {
+        ReturnVal = Union.GetFromObject(o);
+    }
 
 }

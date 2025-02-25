@@ -1,4 +1,4 @@
-﻿using Kinetic.App;
+﻿using KryptonM;
 using Loh.Runtime;
 
 namespace Loh.Values;
@@ -6,61 +6,62 @@ namespace Loh.Values;
 public sealed unsafe class LohState
 {
 
-	public List<object> DebugASM = new List<object>();
-	public int* Code;
-	public int* Lines;
-	public int Top, Capacity;
-	public Union[] Values;
-	public int TopV, CapacityV;
-	public LohTable Table = new LohTable();
-	public LohClosure TopFunc;
+    public int* Code;
 
-	void RecheckCap()
-	{
-		if(Capacity < Top + 1)
-		{
-			int oldcap = Capacity;
-			Capacity = NativeMem.MemGetNextCap(oldcap);
-			Code = NativeMem.MemReallocate(Code, Capacity, oldcap);
-			Lines = NativeMem.MemReallocate(Lines, Capacity, oldcap);
-		}
-	}
+    public List<object> DebugASM = new List<object>();
+    public int* Lines;
+    public LohTable Table = new LohTable();
+    public int Top, Capacity;
+    public LohClosure TopFunc;
+    public int TopV, CapacityV;
+    public Union[] Values;
 
-	public void Tail(VMOP b, int line)
-	{
-		RecheckCap();
+    private void RecheckCap()
+    {
+        if(Capacity < Top + 1)
+        {
+            var oldcap = Capacity;
+            Capacity = NativeMem.MemGetNextCap(oldcap);
+            Code = NativeMem.MemReallocate(Code, Capacity, oldcap);
+            Lines = NativeMem.MemReallocate(Lines, Capacity, oldcap);
+        }
+    }
 
-		Code[Top] = (int) b;
-		Lines[Top] = line;
-		Top++;
+    public void Tail(VMOP b, int line)
+    {
+        RecheckCap();
 
-		DebugASM.Add($"{line}: {b}");
-	}
+        Code[Top] = (int)b;
+        Lines[Top] = line;
+        Top++;
 
-	public void Tail(int b, int line)
-	{
-		RecheckCap();
+        DebugASM.Add($"{line}: {b}");
+    }
 
-		Code[Top] = b;
-		Lines[Top] = line;
-		Top++;
+    public void Tail(int b, int line)
+    {
+        RecheckCap();
 
-		DebugASM.Add($"{line}: {b}");
-	}
+        Code[Top] = b;
+        Lines[Top] = line;
+        Top++;
 
-	public int PushConst(Union value)
-	{
-		if(CapacityV < TopV + 1)
-		{
-			int oldcap = CapacityV;
-			CapacityV = NativeMem.MemGetNextCap(oldcap);
-			Values = NativeMem.MemReallocate(Values, CapacityV);
-		}
+        DebugASM.Add($"{line}: {b}");
+    }
 
-		Values[TopV] = value;
-		TopV++;
+    public int PushConst(Union value)
+    {
+        if(CapacityV < TopV + 1)
+        {
+            var oldcap = CapacityV;
+            CapacityV = NativeMem.MemGetNextCap(oldcap);
+            Values = NativeMem.MemReallocate(Values, CapacityV);
+        }
 
-		return TopV - 1;
-	}
+        Values[TopV] = value;
+        TopV++;
+
+        return TopV - 1;
+    }
 
 }

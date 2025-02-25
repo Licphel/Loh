@@ -3,14 +3,15 @@
 public class LohUpvalue
 {
 
-	public int Slot;
-	public Union Location;
-	public LohUpvalue Next;
+    public Union Location;
+    public LohUpvalue Next;
 
-	public LohUpvalue(in Union loc, int slot)
-	{
-		Slot = slot;
-		Location = loc;
-	}
+    public int Slot;
+
+    public LohUpvalue(in Union loc, int slot)
+    {
+        Slot = slot;
+        Location = loc;
+    }
 
 }
