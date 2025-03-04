@@ -40,7 +40,7 @@ public class Lexer
     // Comments are '--', '//', '#' and also, '@' means one-word hint like get_value(@int index).
     private void DoNext()
     {
-        var ch = Src[Current++];
+        char ch = Src[Current++];
 
         switch(ch)
         {
@@ -158,7 +158,7 @@ public class Lexer
 
     private void Push(Token type, Union v)
     {
-        var txt = Src.Substring(Start, Current - Start);
+        string txt = Src.Substring(Start, Current - Start);
         Result.Add(new Lexeme(type, txt, v, Line));
     }
 
@@ -197,7 +197,7 @@ public class Lexer
         if(End)
             throw LohException.Disassembling("Unable to find paired quotation marks for string.");
         Current++;
-        var sub = Src.Substring(Start + 1, Current - Start - 2);
+        string sub = Src.Substring(Start + 1, Current - Start - 2);
         Push(Token.String, Union.GetFromObject(sub));
     }
 
@@ -212,13 +212,13 @@ public class Lexer
                 Current++;
         }
 
-        var sub = Src.Substring(Start, Current - Start);
+        string sub = Src.Substring(Start, Current - Start);
         Push(Token.Number, new Union(LayeredSeek(sub)));
         return;
 
         float LayeredSeek(string code)
         {
-            if(float.TryParse(code, out var r))
+            if(float.TryParse(code, out float r))
                 return r;
             throw LohException.Disassembling($"Unknown value type '{code}'.");
         }
@@ -228,7 +228,7 @@ public class Lexer
     {
         while(IsIdent(Peek()))
             Current++;
-        var sub = Src.Substring(Start, Current - Start);
+        string sub = Src.Substring(Start, Current - Start);
         Push(GetTypeFromString(sub));
     }
 

@@ -19,7 +19,7 @@ public class LohLibArray
         {
             LohArray arr = v.Get<LohArray>(0);
             LohArray dst = new LohArray();
-            for(var i = 0; i < arr.Count; i++)
+            for(int i = 0; i < arr.Count; i++)
                 dst[i] = arr[i];
             v.Return(dst);
         });

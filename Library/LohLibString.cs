@@ -16,7 +16,7 @@ public class LohLibString
         o.Put("concat", v =>
         {
             StringBuilder bd = new StringBuilder();
-            for(var i = 0; i < v.Arity; i++)
+            for(int i = 0; i < v.Arity; i++)
                 bd.Append(v.GetString(i));
             v.Return(bd.ToString());
         });

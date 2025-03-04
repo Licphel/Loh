@@ -13,7 +13,7 @@ public class _LohTest
         LohState fn = LohEngine.Require(null,
             StringIO.Read(FileSystem.GetAbsolute("F:/C# Workspace/Loh/TheLohTest.loh")), false);
 
-        for(var i = 0; i < 10; i++)
+        for(int i = 0; i < 10; i++)
         {
             DateTime d1 = DateTime.Now;
             LohEngine.Exec(fn.Table["doit"].Dynamic);

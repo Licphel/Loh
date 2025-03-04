@@ -88,7 +88,7 @@ public class LohTable : Dictionary<string, Union>, IBinaryCompound
         {
             if(_index >= _keys.Count)
                 return false;
-            var k = _keys[_index];
+            string k = _keys[_index];
             object o = _dictionary[k];
             _current = new KeyValuePair<string, object>(k, o);
             ++_index;

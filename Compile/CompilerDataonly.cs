@@ -62,10 +62,10 @@ public class CompilerDataonly
 
         while(ch.Type != Token.Brace2 && !stopped)
         {
-            var key = parseKey();
+            string key = parseKey();
             ++pos;
 
-            var value = Parse();
+            object value = Parse();
             result.Set(key, value);
 
             ch = code[pos];
@@ -89,7 +89,7 @@ public class CompilerDataonly
 
         while(ch.Type != Token.Sqbra2 && !stopped)
         {
-            var value = Parse();
+            object value = Parse();
             result.Insert(value);
 
             ch = code[pos];

@@ -1,5 +1,4 @@
 ﻿using KryptonM.IDM;
-using KryptonM.Maths;
 using Loh.Values;
 
 namespace Loh.Library;
@@ -41,8 +40,6 @@ public class LohLibMath
 
         o.Put("pi", Math.PI);
         o.Put("tau", Math.Tau);
-        o.Put("dtr", FloatMath.DTR);
-        o.Put("rtd", FloatMath.RTD);
         o.Put("e", Math.E);
 
         LohEngine.LoadedScripts[new ID("lang/math.loh")] = new LohState { Table = o };

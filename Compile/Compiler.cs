@@ -168,7 +168,7 @@ public unsafe class Compiler
         }
         else
         {
-            var id = LocalId(FrameNow, name);
+            int id = LocalId(FrameNow, name);
             if(id >= 0)
                 throw LohException.Compiling($"Local variable {Previous.Portion} has already been defined.");
             if(Match(Token.EqAssign))
@@ -212,7 +212,7 @@ public unsafe class Compiler
         Emit(VMOP.Close, MakeConst(Union.GetFromObject(fn)));
         // Should be followed by a set local or global
 
-        for(var i = 0; i < fn.UpvalCount; i++)
+        for(int i = 0; i < fn.UpvalCount; i++)
         {
             Emit(frame.Upvalues[i].IsLocal ? 1 : 0);
             Emit(frame.Upvalues[i].Index);
@@ -224,7 +224,7 @@ public unsafe class Compiler
         if(Match(Token.Dataonly))
         {
             CompilerDataonly cdp = new CompilerDataonly(Lexemes, Index);
-            var o = cdp.Parse();
+            object o = cdp.Parse();
             EmitConst(Union.GetFromObject(o));
             Emit(VMOP.Return);
         }
@@ -283,7 +283,7 @@ public unsafe class Compiler
     {
         while(BreakJumps.Count != 0)
             PatchJump(BreakJumps.Dequeue());
-        var curloopstart = Loopstarts.Dequeue();
+        int curloopstart = Loopstarts.Dequeue();
         while(ContiJumps.Count != 0)
             PatchJump(ContiJumps.Dequeue(), curloopstart);
     }
@@ -314,9 +314,9 @@ public unsafe class Compiler
 
         ConsumeLoose(Token.Comma);
 
-        var loopstart = State.Top;
+        int loopstart = State.Top;
         Loopstarts.Enqueue(loopstart);
-        var exitjmp = -1;
+        int exitjmp = -1;
 
         // Comparison
         if(!Match(Token.Comma))
@@ -330,8 +330,8 @@ public unsafe class Compiler
         // Increment
         if(!Match(Token.Do) && !Match(Token.Paren2))
         {
-            var bodyjmp = EmitJump(VMOP.Jmp);
-            var incstart = State.Top;
+            int bodyjmp = EmitJump(VMOP.Jmp);
+            int incstart = State.Top;
             Expression();
             EmitPop();
             EmitLoop(loopstart);
@@ -366,26 +366,26 @@ public unsafe class Compiler
         ConsumeLoose(Token.Paren1);
 
         AddLocal(Consume(Token.Ident));
-        var idk = LocalId(FrameNow, Previous);
+        int idk = LocalId(FrameNow, Previous);
         EmitConst(Union.Null);
         Emit(VMOP.SetLocal, idk);
 
         Consume(Token.Comma);
 
         AddLocal(Consume(Token.Ident));
-        var idv = LocalId(FrameNow, Previous);
+        int idv = LocalId(FrameNow, Previous);
         EmitConst(Union.Null);
         Emit(VMOP.SetLocal, idv);
 
         Lexeme ilex = new Lexeme(Token.Ident, $"__itr{FrameNow.ScopeDepth}__", Union.Null, Line);
         AddLocal(ilex);
-        var idi = LocalId(FrameNow, ilex);
+        int idi = LocalId(FrameNow, ilex);
         EmitConst(new Union(0));
         SetVariable(ilex, 0);
 
         ConsumeLoose(Token.Comma);
 
-        var loopstart = State.Top;
+        int loopstart = State.Top;
 
         // Comparison
         Consume(Token.In);
@@ -393,7 +393,7 @@ public unsafe class Compiler
         Emit(VMOP.GetTabLe);
         Emit(VMOP.GetLocal, idi);
         Emit(VMOP.Equal);
-        var exitjmp = EmitJump(VMOP.Jmpf);
+        int exitjmp = EmitJump(VMOP.Jmpf);
         EmitPop();
         // here the table is still in stack.
         Emit(VMOP.GetTabKv);
@@ -402,8 +402,8 @@ public unsafe class Compiler
         Emit(idv);
 
         // Increment
-        var bodyjmp = EmitJump(VMOP.Jmp);
-        var incstart = State.Top;
+        int bodyjmp = EmitJump(VMOP.Jmp);
+        int incstart = State.Top;
         Emit(VMOP.GetLocal, idi);
         EmitConst(new Union(1));
         Emit(VMOP.Add);
@@ -432,13 +432,13 @@ public unsafe class Compiler
 
     private void StmWhile()
     {
-        var start = State.Top;
+        int start = State.Top;
         Loopstarts.Enqueue(start);
 
         ConsumeLoose(Token.Paren1);
         Expression();
 
-        var exitj = EmitJump(VMOP.Jmpfn);
+        int exitj = EmitJump(VMOP.Jmpfn);
         EmitPop(); // Pop the expression result
 
         ConsumeLoose(Token.Paren2);
@@ -465,7 +465,7 @@ public unsafe class Compiler
             ConsumeLoose(Token.Paren1);
             Expression();
             ConsumeLoose(Token.Paren2);
-            var thenj = EmitJump(VMOP.Jmpfn); // Jump to next branch if false.
+            int thenj = EmitJump(VMOP.Jmpfn); // Jump to next branch if false.
             EmitPop();
             Consume(Token.Do);
             BeginScope();
@@ -484,7 +484,7 @@ public unsafe class Compiler
             EndScope();
         }
 
-        foreach(var jmp in jmps)
+        foreach(int jmp in jmps)
             PatchJump(jmp);
     }
 
@@ -540,11 +540,11 @@ public unsafe class Compiler
     public void ExDot(bool assign)
     {
         Consume(Token.Ident);
-        var name = MakeConstIdent(Previous);
+        int name = MakeConstIdent(Previous);
 
         if(Match(Token.Paren1))
         {
-            var argc = ArgList();
+            int argc = ArgList();
             Emit(VMOP.TabCall, name);
             Emit(argc);
         }
@@ -565,9 +565,9 @@ public unsafe class Compiler
         Emit(VMOP.ReStore);
         Emit(VMOP.RePop); // Copy a stack value.
         Consume(Token.Ident);
-        var name = MakeConstIdent(Previous);
+        int name = MakeConstIdent(Previous);
         Consume(Token.Paren1);
-        var argc = ArgList() + 1;
+        int argc = ArgList() + 1;
         Emit(VMOP.TabCall, name);
         Emit(argc);
     }
@@ -591,13 +591,13 @@ public unsafe class Compiler
 
     public void ExCall(bool assign)
     {
-        var argc = ArgList();
+        int argc = ArgList();
         Emit(VMOP.Call, argc);
     }
 
     private int ArgList()
     {
-        var argc = 0;
+        int argc = 0;
         if(!Check(Token.Paren2))
             do
             {
@@ -611,7 +611,7 @@ public unsafe class Compiler
 
     public void ExAnd(bool assign)
     {
-        var endj = EmitJump(VMOP.Jmpfn);
+        int endj = EmitJump(VMOP.Jmpfn);
         EmitPop();
         ExGetPrecedence(CPriority.And);
         PatchJump(endj);
@@ -619,7 +619,7 @@ public unsafe class Compiler
 
     public void ExOr(bool assign)
     {
-        var endj = EmitJump(VMOP.Jmpf);
+        int endj = EmitJump(VMOP.Jmpf);
         EmitPop();
         ExGetPrecedence(CPriority.And);
         PatchJump(endj);
@@ -638,7 +638,7 @@ public unsafe class Compiler
                 Lexeme idt = Consume(Token.Ident);
                 Consume(Token.EqAssign);
                 Expression();
-                var b = MakeConstIdent(idt);
+                int b = MakeConstIdent(idt);
                 Emit(VMOP.SetTable, b);
                 Emit(VMOP.StPop);
                 if(Check(Token.Comma))
@@ -658,7 +658,7 @@ public unsafe class Compiler
         if(!Check(Token.Sqbra2))
         {
             Emit(VMOP.ReStore);
-            var i = 0;
+            int i = 0;
             do
             {
                 EmitConst(new Union(i));
@@ -795,7 +795,7 @@ public unsafe class Compiler
     private void NamedVariable(Lexeme name, int site, bool assign) // site: 0 - local, 1 - global, 2 - unsure
     {
         VMOP op;
-        var id = LocalId(FrameNow, name);
+        int id = LocalId(FrameNow, name);
 
         if((site == 0 || site == 2) && id != -1)
         {
@@ -840,7 +840,7 @@ public unsafe class Compiler
 
     private int LocalId(FrameTrace frame, Lexeme name)
     {
-        for(var i = frame.LocalCount - 1; i >= 0; i--)
+        for(int i = frame.LocalCount - 1; i >= 0; i--)
         {
             Local local = frame.Locals[i];
             if(local.Name.Portion == name.Portion)
@@ -852,7 +852,7 @@ public unsafe class Compiler
 
     private bool AddLocal(Lexeme name)
     {
-        var i = LocalId(FrameNow, name);
+        int i = LocalId(FrameNow, name);
         if(i == -1)
         {
             FrameNow.TryExpandLocal(FrameNow.LocalCount);
@@ -871,14 +871,14 @@ public unsafe class Compiler
         if(frame.Enclosing == null)
             return -1;
 
-        var lid = LocalId(frame.Enclosing, name);
+        int lid = LocalId(frame.Enclosing, name);
         if(lid != -1)
         {
             frame.Enclosing.Locals[lid].Captured = true;
             return AddUpvalue(frame, lid, true);
         }
 
-        var uid = UpvalueId(frame.Enclosing, name);
+        int uid = UpvalueId(frame.Enclosing, name);
         if(uid != -1)
             return AddUpvalue(frame, uid, false);
 
@@ -887,9 +887,9 @@ public unsafe class Compiler
 
     private int AddUpvalue(FrameTrace frame, int lid, bool local)
     {
-        var upvalCount = frame.Function.UpvalCount;
+        int upvalCount = frame.Function.UpvalCount;
 
-        for(var i = 0; i < upvalCount; i++)
+        for(int i = 0; i < upvalCount; i++)
         {
             ref Upvalue upv = ref frame.Upvalues[i];
             if(upv.Index == lid && upv.IsLocal == local)
@@ -903,7 +903,7 @@ public unsafe class Compiler
 
     private void SetVariable(Lexeme name, int type) // 0 - local, 1 - global, 2 - upvalue
     {
-        var gid = ParseVariable(name, type == 1);
+        int gid = ParseVariable(name, type == 1);
 
         if(type == 1)
             Emit(VMOP.SetFixed, gid);
@@ -968,7 +968,7 @@ public unsafe class Compiler
     private void EmitLoop(int start)
     {
         Emit(VMOP.Jback);
-        var offset = State.Top - start + 1;
+        int offset = State.Top - start + 1;
         Emit(offset);
     }
 
@@ -981,25 +981,25 @@ public unsafe class Compiler
 
     private void PatchJump(int offset)
     {
-        var jmp = State.Top - offset - 1;
+        int jmp = State.Top - offset - 1;
         State.Code[offset] = jmp;
     }
 
     private void PatchJump(int offset, int dest)
     {
-        var jmp = dest - offset - 1;
+        int jmp = dest - offset - 1;
         State.Code[offset] = jmp;
     }
 
     private void EmitPop(int n = 1)
     {
-        for(var i = 0; i < n; i++)
+        for(int i = 0; i < n; i++)
             Emit(VMOP.StPop);
     }
 
     private void EmitConst(Union o)
     {
-        var i = MakeConst(o);
+        int i = MakeConst(o);
         Emit(VMOP.StPush, i);
     }
 

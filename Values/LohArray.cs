@@ -16,7 +16,7 @@ public class LohArray : List<Union>, IBinaryList
             if(index >= Count)
             {
                 if(index != Count)
-                    for(var i = 0; i < index - Count; i++)
+                    for(int i = 0; i < index - Count; i++)
                         Add(Union.Null);
                 Add(value);
             }

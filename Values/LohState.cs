@@ -20,7 +20,7 @@ public sealed unsafe class LohState
     {
         if(Capacity < Top + 1)
         {
-            var oldcap = Capacity;
+            int oldcap = Capacity;
             Capacity = NativeMem.MemGetNextCap(oldcap);
             Code = NativeMem.MemReallocate(Code, Capacity, oldcap);
             Lines = NativeMem.MemReallocate(Lines, Capacity, oldcap);
@@ -53,7 +53,7 @@ public sealed unsafe class LohState
     {
         if(CapacityV < TopV + 1)
         {
-            var oldcap = CapacityV;
+            int oldcap = CapacityV;
             CapacityV = NativeMem.MemGetNextCap(oldcap);
             Values = NativeMem.MemReallocate(Values, CapacityV);
         }

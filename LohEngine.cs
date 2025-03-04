@@ -20,7 +20,7 @@ public class LohEngine
         Frames = new VMFrame[128];
         LoadedScripts = new Dictionary<ID, LohState>();
 
-        for(var i = 0; i < Frames.Length; i++)
+        for(int i = 0; i < Frames.Length; i++)
         {
             Frames[i] = new VMFrame();
             Frames[i].Init();
@@ -65,7 +65,7 @@ public class LohEngine
         if(LoadedScripts.TryGetValue(idt, out LohState inst))
             return Union.GetFromObject(inst.Table);
 
-        var code = StringIO.Read(idt.File);
+        string code = StringIO.Read(idt.File);
         List<Lexeme> lst = new Lexer().Analyse(idt.Full, code);
         Compiler c = new Compiler(idt.Full, lst, code);
         LohClosure fn = new LohClosure(c.Compile());

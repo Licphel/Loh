@@ -27,7 +27,7 @@ public unsafe class VMFrame
     {
         Arglist = new Arguments(this);
         Frames = new CallFrame[FrameLength];
-        for(var i = 0; i < FrameLength; i++)
+        for(int i = 0; i < FrameLength; i++)
             Frames[i] = new CallFrame();
         Reg = new Union[RegLength];
         Stack = new Union[StackLength];
@@ -43,7 +43,7 @@ public unsafe class VMFrame
         frame.Slots = Stacktop - 1;
         StateNow = o.Func.State.Table;
 
-        foreach(var arg in objs) Stack[Stacktop++] = Union.GetFromObject(arg);
+        foreach(object arg in objs) Stack[Stacktop++] = Union.GetFromObject(arg);
 
         return ref Run();
     }
@@ -240,10 +240,10 @@ public unsafe class VMFrame
                     fn = (LohFunc)Constsnow[*Ipnow++].Objref;
                     clos = new LohClosure(fn);
                     Stack[Stacktop++] = Union.GetFromObject(clos);
-                    for(var i = 0; i < clos.UpvalCount; i++)
+                    for(int i = 0; i < clos.UpvalCount; i++)
                     {
-                        var local = *Ipnow++;
-                        var id = *Ipnow++;
+                        int local = *Ipnow++;
+                        int id = *Ipnow++;
                         if(local == 1)
                             clos.Upvalues[i] = CaptureUpval(Stack[Slotsnow + id], Slotsnow + id);
                         else
@@ -354,7 +354,7 @@ public unsafe class VMFrame
 
         int GetLine()
         {
-            var ini = FrameNow.Closure.Func.State.Code;
+            int* ini = FrameNow.Closure.Func.State.Code;
             return FrameNow.Closure.Func.State.Lines[Ipnow - ini - 1];
         }
 
@@ -424,7 +424,7 @@ public unsafe class VMFrame
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         void CheckedCall(in Union callee, int argc)
         {
-            var o = callee.Objref;
+            object o = callee.Objref;
 #if VM_STACK_OP_TRACE
 			Console.WriteLine($">> CALL INTO {o}");
 #endif
